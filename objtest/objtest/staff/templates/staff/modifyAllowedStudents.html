@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Online Objective Test</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand navbar-dark bg-dark">
+            <ul class="nav navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"
+                        >Modify Allowed Students for {{ question_credential.subject_name }} -
+                        {{ question_credential.subject_code }}
+                        <span class="sr-only">(current)</span></a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./">Back</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container mt-5 mb-5">
+            <div class="h4">
+                Subject: {{ question_credential.subject_name }} -
+                {{ question_credential.subject_code }}
+                <span class="float-right"
+                    >Time: {{ question_credential.test_date }} by (
+                    {{ question_credential.start_time }}
+                    - {{ question_credential.end_time }})</span
+                >
+            </div>
+            <br /><br />
+            <div class="container">
+                <span class="h5">Allowed Students:</span> {{ question_credential.students_allowed }}
+                <br />
+                <br />
+                <span class="h5"
+                    >Total Allowed Students: {{ question_credential.total_allowed_students }}</span
+                >
+            </div>
+            <br /><br />
+            <div class="alert alert-secondary">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{question_credential.pk}}" name="hiddenField">
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="removeStudents">Remove Students</label>
+                        </div>
+                        <div class="col-8">
+                            <input
+                                class="form-control"
+                                type="text"
+                                name="removeStudents"
+                                id="removeStudents"
+                            />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="appendStudents">Append Students</label>
+                        </div>
+                        <div class="col-8">
+                            <input
+                                class="form-control"
+                                type="text"
+                                name="appendStudents"
+                                id="appendStudents"
+                            />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="text-center">
+                        <input
+                            class="btn btn-secondary"
+                            type="submit"
+                            name="modifyStudents"
+                            value="Modify"
+                        />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

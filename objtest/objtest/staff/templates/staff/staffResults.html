@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Online Objective Test</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand navbar-dark bg-dark">
+            <ul class="nav navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"
+                        >Result : {{ question_credential.subject_code }} -
+                        {{ question_credential.subject_name }}</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../">Back</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container">
+            <h4 class="text-center mt-5 mb-5">
+                Results of {{ question_credential.subject_code }} -
+                {{ question_credential.subject_name }}
+            </h4>
+            <table id="results_table" class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Register Number</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>CO 1</th>
+                        <th>CO 2</th>
+                        <th>CO 3</th>
+                        <th>CO 4</th>
+                        <th>CO 5</th>
+                        <th>CO 6</th>
+                        <th>CO 7</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td scope="row">-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>Maximum: </td>
+                        <td>{{max_co1}}</td>
+                        <td>{{max_co2}}</td>
+                        <td>{{max_co3}}</td>
+                        <td>{{max_co4}}</td>
+                        <td>{{max_co5}}</td>
+                        <td>{{max_co6}}</td>
+                        <td>{{max_co7}}</td>
+                        <td>{{max_total}}</td>
+                    </tr>
+                    {% for result in results %}
+                    <tr>
+                        <td scope="row">{{forloop.counter}}</td>
+                        <td>{{result.rollnumber.user.username}}</td>
+                        <td>{{result.start_time}}</td>
+                        <td>{{result.end_time}}</td>
+                        <td>{{result.co1_total}}</td>
+                        <td>{{result.co2_total}}</td>
+                        <td>{{result.co3_total}}</td>
+                        <td>{{result.co4_total}}</td>
+                        <td>{{result.co5_total}}</td>
+                        <td>{{result.co6_total}}</td>
+                        <td>{{result.co7_total}}</td>
+                        <td>{{result.total}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                <button class="btn btn-dark float-right" id="results_table_button">Download as CSV</button>
+            </div>
+        </div>
+    </body>
+    <script>
+        function download_csv(csv, filename) {
+            var csvFile;
+            var downloadLink;
+
+            // CSV FILE
+            csvFile = new Blob([csv], {type: "text/csv"});
+
+            // Download link
+            downloadLink = document.createElement("a");
+
+            // File name
+            downloadLink.download = filename;
+
+            // We have to create a link to the file
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+
+            // Make sure that the link is not displayed
+            downloadLink.style.display = "none";
+
+            // Add the link to your DOM
+            document.body.appendChild(downloadLink);
+
+            // Lanzamos
+            downloadLink.click();
+        }
+
+        function export_table_to_csv(html, filename) {
+            var csv = [];
+            var rows = document.querySelectorAll("table tr");
+            
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll("td, th");
+                
+                for (var j = 0; j < cols.length; j++) 
+                    row.push(cols[j].innerText);
+                
+                csv.push(row.join(","));		
+            }
+
+            // Download CSV
+            download_csv(csv.join("\n"), filename);
+        }
+
+        document.querySelector("#results_table_button").addEventListener("click", function () {
+            var html = document.querySelector("#results_table").outerHTML;
+            console.log("clicked");
+            export_table_to_csv(html, "table.csv");
+        });
+
+    </script>
+</html>

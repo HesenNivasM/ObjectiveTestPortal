@@ -1,0 +1,5 @@
+*.lock
+*.pyc
+objtest/objtest/*/migrations/
+objtest/objtest/media/
+*.sqlite3

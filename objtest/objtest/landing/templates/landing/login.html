@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+            OOT
+        </title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body  style="background-color: #ffffff">
+      <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExample03">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+            </li>
+          </ul>
+          <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="../../logout/">{% if request.user.username %}Logout{% endif %}</a>
+                </li>
+            </ul>
+        </div>
+      </nav>
+    <div class="container">
+        <!--<div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>-->
+        <!--<div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>-->
+        <!--<div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>-->
+        <br><br><br><br>
+        <div class="container-fluid">
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-sm-12 col-md-6">
+            <div class="alert text-center" style="background-color: #f1f1f1;">
+                <div class="col-2"></div>
+                <div class="panel-body" class="text-monospace" >
+                    <h3 class="text-monospace" >Online Objective Test Login</h3><br>
+                    <div class="form-group"></div>
+                    {% if error_message %}
+                        <p><strong style="color:red;">{{ error_message }}</strong></p>
+                    {% endif %}
+                     <div class="card-body px-lg-5 pt-0">
+                    <form role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="md-form" >
+
+                            <div >
+                                <input id="id_username" maxlength="30" name="username" type="text" class="form-control" placeholder="Username">
+                            </div><br>
+                        </div>
+                        <div class="md-form" >
+                            <div>
+                                <input id="id_password" maxlength="30" name="password" type="password" class="form-control" placeholder="Password">
+                            </div><br>
+                        </div>
+                    <div>
+                        <label id="num1"></label> + <label id="num2"></label> = <input class="form-control" oninput="check();" type="text" id ="sum">
+
+                    </div>
+                    <div class="form-group">
+                            <div>
+                                <button type="submit"id= "login"  class="btn btn-rounded btn-block my-4 waves-effect z-depth-0" >Log In</button>
+                         <script>
+                        document.getElementById('login').disabled =true;
+                        var x = document.getElementById('num1').innerHTML = parseInt(Math.random()*20);
+                        var y = document.getElementById('num2').innerHTML = parseInt(Math.random()*20);
+                        var z = x+y;
+
+
+                       function check(){
+                       document.getElementById('login').disabled =true;
+                        var xx=document.getElementById('sum').value;
+                    if(z==xx){
+                    document.getElementById('login').disabled = false;
+                          }
+                       }
+                    </script>
+                            </div>
+                    </div>
+
+                    </form></div>
+                     <div class="panel-footer">
+                        <label title="Aryal Nivas Tiwari">Developed By ANT</label>
+                </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-2">
+        </div>
+    <div class="col-3"></div>
+</div>
+
+    </div>
+    </div>
+    <script>
+// setInterval(function(){
+// var online = navigator.onLine
+// if (online == true){
+//   document.body.style.backgroundColor = "white";
+// }
+// else{
+//   document.body.style.backgroundColor = "red";
+// }},3000)
+
+// setInterval(function(){
+
+//     var xhr = new XMLHttpRequest();
+//     var file = "http://srecportal.srec.ac.in:8080";
+//     var randomNum = Math.round(Math.random() * 10000);
+
+//     xhr.open('HEAD', file , true);
+//     xhr.send();
+
+//     xhr.addEventListener("readystatechange", processRequest, false);
+
+//     function processRequest(e) {
+//       if (xhr.readyState == 4) {
+//         if (xhr.status >= 200 && xhr.status < 304) {
+
+// document.getElementById("login").innerText="Login"
+//         check();        } else {
+// document.getElementById("login").innerText="server is down,Please Wait!!!"
+//         document.getElementById("login").disabled=true;}
+//       }
+//     }
+// },3000)
+
+</script>
+
+    </body>
+</html>

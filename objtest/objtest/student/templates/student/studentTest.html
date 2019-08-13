@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Online Objective Test</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand navbar-dark bg-dark">
+            <ul class="nav navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">{{ subject_code }} - {{ subject_name }}</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Nav 2</a>
+                </li> -->
+            </ul>
+        </nav>
+        <div class="container-fluid">
+            <div class="row" id="body">
+                <div class="col-3" id="navigation">
+                    <br />
+                    <br />
+                    <h4 class="text-center">Navigation Panel</h4>
+                    <br />
+                    <div class="row text-center">
+                        <div class="col text-center p-0">
+                            <form action="" method="post">
+                                <input type="submit" value="Previous" name="previous" />
+                            </form>
+                        </div>
+                        <div class="col text-center p-0">
+                            <form action="" method="post">
+                                <input type="submit" value="Mark" name="mark_this_page" />
+                            </form>
+                        </div>
+                        <div class="col text-center p-0">
+                            <form action="" method="post">
+                                <input type="submit" value="Next" name="next" />
+                            </form>
+                        </div>
+                    </div>
+                    <div id="navigationArea"></div>
+                    <br>
+                    <div class="text-center" id="information">
+                        <h5>Questions Answered: {{answers_marked_count}} / {{total_questions}}</h5>
+                        <form id="finishform" action="" method="post">
+                            <input class="btn btn-danger" name="finishTest" id="finishTest" type="submit" value="Finish Test">
+                        </form>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <br />
+                    <div id="headings">                        
+                        <h4 class="float-right">Time Left : <span id="timeleft_span"></span></h4>
+                        <h4 class="text-center">Question {{ question_number }}</h4>
+                    </div>
+                    <div class="alert alert-secondary" id="question">
+                        {{ question | safe }}
+                    </div>
+                    <div id="options">
+                        <form action="" method="post">
+                            <div id="div_option_1" class="alert alert-dark">
+                                <input type="radio" name="option" id="option1" value="1" onclick="displSave(this.value);"/>
+                                {{option_one|safe}}
+                            </div>
+                            <div id="div_option_2" class="alert alert-dark">
+                                <input type="radio" name="option" id="option2" value="2" onclick="displSave(this.value);"/>
+                                {{option_two|safe}}
+                            </div>
+                            <div id="div_option_3" class="alert alert-dark">
+                                <input type="radio" name="option" id="option3" value="3" onclick="displSave(this.value);"/>
+                                {{option_three|safe}}
+                            </div>
+                            <div id="div_option_4" class="alert alert-dark">
+                                <input type="radio" name="option" id="option4" value="4" onclick="displSave(this.value);"/>
+                                {{option_four|safe}}
+                            </div>
+                            <div class="container">
+                                <input style="display:none;" class="btn btn-dark float-right" type="submit" value="Save" id="save_response" name="save_response">
+                            </div>
+                            <br>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+
+        let timeleft = () => {
+            let now     = new Date(); 
+            let hour    = now.getHours();
+            let minute  = now.getMinutes();
+            let second  = now.getSeconds();
+            let constraint_hour = parseInt("{{constraint_hour}}");
+            let constraint_minute = parseInt("{{constraint_minute}}");
+            let constraint_second = parseInt("{{constraint_second}}");
+            if(constraint_second < second){
+                constraint_second += 60;
+                if(constraint_minute != 0){
+                    constraint_minute -= 1;
+                }
+                else{
+                    constraint_hour -= 1;
+                    constraint_minute = 59;
+                }
+            }
+            if(constraint_minute < minute){
+                constraint_minute += 60;
+                constraint_hour -= 1;
+            }
+            let hourLeft = constraint_hour - hour;
+            let minuteLeft = constraint_minute - minute;
+            let secondLeft = constraint_second - second;
+            if (hourLeft == 0 && minuteLeft == 0 && secondLeft == 0){
+                console.log("Hai");
+                document.getElementById("finishTest").click();
+            }
+            if(hourLeft < 10){
+                hourLeft = String("0" + hourLeft)
+            }
+            else{
+                hourLeft = String(hourLeft)
+            }
+            if(minuteLeft < 10){
+                minuteLeft = String("0" + minuteLeft)
+            }
+            else{
+                minuteLeft = String(minuteLeft)
+            }
+            if(secondLeft < 10){
+                secondLeft = String("0" + secondLeft)
+            }
+            else{
+                secondLeft = String(secondLeft)
+            }
+            document.getElementById("timeleft_span").innerHTML = hourLeft + ":" + minuteLeft + ":" + secondLeft;
+        }        
+
+        let displSave = (value) => {
+            document.getElementById("save_response").style.display = "block";
+            for(let i = 1; i < 5; i++){
+                document.getElementById("div_option_" + i).setAttribute("style", "");
+                document.getElementById("div_option_" + i).setAttribute("class", "alert alert-dark");
+
+            }
+            document.getElementById("div_option_" + value).setAttribute("style", "background-color:lightgreen");
+        }
+
+        let submitSpecificPage = page => {
+            form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("id", "myForm");
+            input = document.createElement("input");
+            input.setAttribute("type", "hidden");
+            input.setAttribute("name", "go_to_page");
+            input.setAttribute("value", page);
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+            // console.log("hai");
+        };
+
+        let highlightCurrentQuestion = () => {
+            target = String(parseInt({{question_counter}}) + 1);
+            document.getElementById(target).setAttribute("style", "background-color: black;color:white;");
+        }
+
+        let highlightMarkedQuestions = () => {
+            let questions = [];
+            {% for question in questions_marked %}
+                questions.push(parseInt("{{question}}"))
+            {% endfor %}
+            questions.forEach(question => {
+                question += 1;
+                document.getElementById(String(question)).setAttribute("style", "background-color: white;color:black;")
+            });
+        }
+
+        let highlightAnsweredQuestions = () => {
+            let questions = [];
+            {% for question in answers_marked %}
+                questions.push(parseInt("{{question}}"))
+            {% endfor %}
+            let questionNumber = 1;
+            questions.forEach(option => {
+                if( option > 0 ){
+                    document.getElementById(String(questionNumber)).setAttribute("style", "background-color: lightgreen;color:white;")
+                    if(questionNumber - 1 == parseInt("{{question_counter}}")){
+                        console.log("option" + String(option));
+                        document.getElementById("option" + String(option)).checked = true;
+                        document.getElementById("div_option_" + option).setAttribute("style", "background-color:lightgreen");
+                    }
+                }
+                questionNumber += 1;
+            });
+            console.log(questions);
+        }
+
+        let displayNavigation = () => {
+            target = document.getElementById("navigationArea");
+            let totalQuestions = parseInt({{total_questions}});
+            // let totalQuestions = parseInt(50);
+            let numberOfRows =
+                parseInt(totalQuestions % 5) == 0
+                    ? parseInt(totalQuestions / 5)
+                    : parseInt(totalQuestions / 5) + 1;
+            let temp = totalQuestions;
+            for (let i = 0; i < numberOfRows; i++) {
+                let row = document.createElement("div");
+                row.setAttribute("class", "row");
+                if (temp >= 5) {
+                    for (let j = 0; j < 5; j++) {
+                        let col = document.createElement("div");
+                        col.setAttribute("class", "col p-0 pt-4");
+                        let span = document.createElement("span");
+                        span.setAttribute("id", String(i * 5 + j + 1));
+                        span.setAttribute("class", "alert alert-primary");
+                        span.setAttribute("onclick", "submitSpecificPage(this.innerHTML);");
+                        span.innerHTML =
+                            i * 5 + j + 1 < 10
+                                ? "0" + String(i * 5 + j + 1)
+                                : String(i * 5 + j + 1);
+                        col.appendChild(span);
+                        row.appendChild(col);
+                    }
+                    temp -= 5;
+                } else {
+                    for (let j = 0; j < temp; j++) {
+                        let col = document.createElement("div");
+                        col.setAttribute("class", "col p-0 pt-4");
+                        let span = document.createElement("span");
+                        span.setAttribute("id", String(i * 5 + j + 1));
+                        span.setAttribute("class", "alert alert-primary");
+                        span.setAttribute("onclick", "submitSpecificPage(this.innerHTML);");
+                        span.innerHTML =
+                            i * 5 + j + 1 < 10
+                                ? "0" + String(i * 5 + j + 1)
+                                : String(i * 5 + j + 1);
+                        col.appendChild(span);
+                        row.appendChild(col);
+                    }
+                    for (let j = 0; j < 5 - temp; j++) {
+                        let col = document.createElement("div");
+                        col.setAttribute("class", "col p-0 pt-4");
+                        let span = document.createElement("span");
+                        span.setAttribute("class", "alert alert-primary");
+                        span.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;";
+                        col.appendChild(span);
+                        row.appendChild(col);
+                    }
+                }
+                target.appendChild(row);
+            }
+            // console.log(numberOfRows);
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            displayNavigation();
+            highlightAnsweredQuestions();
+            highlightMarkedQuestions();
+            highlightCurrentQuestion();
+            setInterval(function(){
+                timeleft();
+            }, 1000);
+        });
+    </script>
+</html>

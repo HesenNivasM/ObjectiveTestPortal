@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Online Objective Test</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand navbar-dark bg-dark">
+            <ul class="nav navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"
+                        >Student Dashboard <span class="sr-only">(current)</span></a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../logout/">{{ username }} - Logout</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container mt-5 mb-5">
+            {% if current_question_papers %}
+            <div id="currentQuestionPapers">
+                <h3>Current Question Papers <span class="h4 float-right">{{current_question_papers_length}} / {{question_papers_length}}</span></h3>                
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Subject Code</th>
+                            <th scope="col">Subject Name</th>
+                            <th scope="col">Allocated Time</th>
+                            <th scope="col">Total Questions</th>
+                            <th scope="col">Attempt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for question_credential in current_question_papers %}
+                        <tr>
+                            <td scope="row">{{ forloop.counter }}</td>
+                            <td>{{ question_credential.subject_code }}</td>
+                            <td>{{ question_credential.subject_name }}</td>
+                            <td>{{ question_credential.test_date }} ( {{ question_credential.start_time }} - {{ question_credential.end_time }} )</td>
+                            <td>{{ question_credential.total_questions }}</td>
+                            <td>
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ question_credential.pk }}" name="question_credential_pk">
+                                    <input class="btn btn-success" type="submit" name="attemptQuestionPaper" value="Attempt">
+                                </form>
+                            </td>                            
+                        </tr>                        
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <br>
+            {% endif %}
+            {% if allocated_question_papers %}
+            <div id="allocatedQuestionPapers">
+                <h3>Allocated Question Papers <span class="h4 float-right">{{allocated_question_papers_length}} / {{question_papers_length}}</span></h3>                
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Subject Code</th>
+                            <th scope="col">Subject Name</th>
+                            <th scope="col">Allocated Time</th>
+                            <th scope="col">Total Questions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for question_credential in allocated_question_papers %}
+                        <tr>
+                            <td scope="row">{{ forloop.counter }}</td>
+                            <td>{{ question_credential.subject_code }}</td>
+                            <td>{{ question_credential.subject_name }}</td>
+                            <td>{{ question_credential.test_date }} ( {{ question_credential.start_time }} - {{ question_credential.end_time }} )</td>
+                            <td>{{ question_credential.total_questions }}</td>
+                        </tr>                        
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <br>
+            {% endif %}
+        </div>
+    </body>
+</html>
