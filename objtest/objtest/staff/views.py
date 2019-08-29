@@ -143,6 +143,16 @@ def staff_dashboard(request):
         request.session["add_questions"] = True
         request.session["current_question_number"] = 1
         return redirect('staff_questions')
+    # Modify the time allocated for the question credential
+    if request.method == "POST" and request.POST.get("modifyTime"):
+        question_credential = QuestionCredendial.objects.get(pk = int(request.POST.get("hiddenField")))
+        question_credential.start_time = request.POST.get("startTime")
+        question_credential.end_time = request.POST.get("endTime")
+        question_credential.test_date = request.POST.get("testDate")
+        question_credential.save()
+        return render(request, 'staff/modifyAllowedStudents.html', {
+            "question_credential": question_credential,
+        })
     # Modify the allowed allowed student credential
     if request.method == "POST" and request.POST.get("modifyStudents"):
         question_credential = QuestionCredendial.objects.get(pk = int(request.POST.get("hiddenField")))
@@ -196,6 +206,17 @@ def staff_dashboard(request):
         request.session["add_questions"] = True
         request.session["current_question_number"] = question_credential.questions_added + 1
         return redirect('staff_questions')
+    # View the questions entered
+    if request.method == "POST" and request.POST.get("clickViewQuestions"):
+        question_credential = QuestionCredendial.objects.get(pk = int(request.POST.get("viewQuestions")))
+        questions = Question.objects.filter(question_credential = question_credential)
+        subject_code = question_credential.subject_code
+        subject_name = question_credential.subject_name
+        return render(request, "staff/viewQuestions.html", {
+            "questions" : questions,
+            "subject_code" : subject_code,
+            "subject_name" : subject_name,
+        })
     # Return data for dashboard
     staff_question_credentials = QuestionCredendial.objects.filter(staff_id = str(request.user.username))
     incomplete_question_credentials = []

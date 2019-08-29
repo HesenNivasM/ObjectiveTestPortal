@@ -37,7 +37,46 @@
                     - {{ question_credential.end_time }})</span
                 >
             </div>
-            <br /><br />
+            <br />
+            <div class="container">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <label for="testDate">Test Date</label>                            
+                        </div>
+                        <div class="col-6">
+                            <input type="date" class="form-control" name="testDate" id="testDate">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                            <div class="col-6">
+                                <label for="startTime">Test Start Time</label>                            
+                            </div>
+                            <div class="col-6">
+                                <input type="time" class="form-control" name="startTime" id="startTime">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <label for="endTime">Test End Time</label>                            
+                        </div>
+                        <div class="col-6">
+                            <input type="time" class="form-control" name="endTime" id="endTime">
+                        </div>
+                    </div>
+                    <input type="hidden" value="{{question_credential.pk}}" name="hiddenField">
+                    <div class="text-center">
+                        <input
+                            class="btn btn-secondary"
+                            type="submit"
+                            name="modifyTime"
+                            value="Modify"
+                        />
+                    </div>
+                </form>
+            </div>
+            <br />
             <div class="container">
                 <span class="h5">Allowed Students:</span> {{ question_credential.students_allowed }}
                 <br />

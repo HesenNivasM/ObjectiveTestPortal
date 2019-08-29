@@ -3,3 +3,4 @@
 objtest/objtest/*/migrations/
 objtest/objtest/media/
 *.sqlite3
+.Pipfile.swp
