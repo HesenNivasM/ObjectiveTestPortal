@@ -65,6 +65,8 @@ def student_test(request):
         result.co6_total = co6_total
         result.co7_total = co7_total
         result.save()
+        # To give a toast on completion
+        request.session["completed_successfully"] = True
         return redirect('student_dashboard')
 
     if request.method == "POST" and request.POST.get("previous"):
@@ -177,6 +179,11 @@ def student_dashboard(request):
             current_question_papers.append(question_credential)
         else:
             allocated_question_papers.append(question_credential)
+    if request.session.get("completed_successfully"):
+        completed_successfully = True
+        request.session["completed_successfully"] = False
+    else:
+        completed_successfully = False
     return render(request, "student/studentDashboard.html", {
         "username": username,
         "question_papers": question_papers,
@@ -185,4 +192,5 @@ def student_dashboard(request):
         "question_papers_length": len(question_papers),
         "current_question_papers_length": len(current_question_papers),
         "allocated_question_papers_length": len(allocated_question_papers),
+        "completed_successfully": completed_successfully
     })
