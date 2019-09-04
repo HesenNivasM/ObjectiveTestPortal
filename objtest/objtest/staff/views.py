@@ -10,7 +10,14 @@ import json
 def staff_results(request):
     result_question_credential_pk = request.session.get("result_question_credential_pk")
     question_credential = QuestionCredendial.objects.get(pk = result_question_credential_pk)
-    results = Result.objects.filter(question_credential = question_credential)
+    results = Result.objects.filter(question_credential = question_credential).order_by('rollnumber')
+    # Check if repetition is not found
+    temp_for_rollnumbers = []
+    refined_results = []
+    for result in results:
+        if int(result.rollnumber.user.username) not in temp_for_rollnumbers:
+            temp_for_rollnumbers.append(int(result.rollnumber.user.username))
+            refined_results.append(result)        
     max_total = 0
     max_co1 = 0
     max_co2 = 0
@@ -40,7 +47,7 @@ def staff_results(request):
     return render(request, 'staff/staffResults.html', {
         "result_question_credential_pk": result_question_credential_pk,
         "question_credential": question_credential,
-        "results": results,
+        "results": refined_results,
         "max_total": max_total,
         "max_co1": max_co1,
         "max_co2": max_co2,
