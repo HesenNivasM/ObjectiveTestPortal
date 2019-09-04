@@ -209,6 +209,8 @@ def staff_dashboard(request):
     # View the questions entered
     if request.method == "POST" and request.POST.get("clickViewQuestions"):
         question_credential = QuestionCredendial.objects.get(pk = int(request.POST.get("viewQuestions")))
+        # Remember the pk of the quesiton credential for edit
+        request.session["question_credential_pk"] = int(request.POST.get("viewQuestions"))
         questions = Question.objects.filter(question_credential = question_credential)
         subject_code = question_credential.subject_code
         subject_name = question_credential.subject_name
@@ -302,4 +304,20 @@ def staff_questions(request):
         })
     return render(request, 'staff/staffDashboard.html', {
         "toast": "Questions Added Successfully"
+    })
+
+# Help Edit the questions
+def staff_edit(request, id):
+    question_credential = QuestionCredendial.objects.get(pk = int(request.session.get("question_credential_pk")))
+    question = Question.objects.get(question_credential = question_credential, question_number = id)    
+    form = QuestionForm(request.POST or None, instance = question)
+    if form.is_valid():
+        form.save()
+        return redirect("staff_dashboard")
+    return render(request, "staff/editQuestions.html", {
+        "staff_id" : request.session.get("staff_id"),
+        "subject_code" : request.session.get("subject_code"),
+        "subject_name" : request.session.get("subject_name"),        
+        "question_form": form,
+        "current_question_number": id,
     })

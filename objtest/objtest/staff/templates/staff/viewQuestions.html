@@ -67,6 +67,10 @@
                 {% endif %}
                     {{ question.option_four | safe }}
                 </div>
+                <div class="float-right">
+                    <a class="btn btn-danger" href="./question/edit/{{question.question_number}}/">Edit</a>
+                </div>
+                <br><br>
             </div>
             {% endfor %}
         </div>
